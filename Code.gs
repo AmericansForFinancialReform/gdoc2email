@@ -1,17 +1,20 @@
 function testSchemas() {
   try {
+    
   // note: only createTemplateFromFile lets you use <?= ?>, createHtmlOutputFromFile does NOT
   var htmlBody = HtmlService.createTemplateFromFile('mail_template').evaluate();
   var html_str = htmlBody.getContent();
-    
+  
+  var title = DocumentApp.getActiveDocument().getName();
+
   MailApp.sendEmail({
     to: Session.getActiveUser().getEmail(),
-    subject: 'Test Email markup - ' + new Date(),
+    subject: title  + new Date(),
     htmlBody: htmlBody.getContent()
   });
   }
   catch (e) {
-    google.script.run.logErrors(e.toString());
+    logErrors(e.toString());
   }
 }
 
