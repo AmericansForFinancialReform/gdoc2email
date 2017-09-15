@@ -1,25 +1,58 @@
 function testSchemas() {
   try {
     
+  // Not currently using this Email Template; need to figure out how to insert the image 
+  // into the right place
+
   // note: only createTemplateFromFile lets you use <?= ?>, createHtmlOutputFromFile does NOT
-  var htmlBody = HtmlService.createTemplateFromFile('mail_template').evaluate();
-  var html_str = htmlBody.getContent();
+  // var htmlBody = HtmlService.createTemplateFromFile('mail_template').evaluate();
+  // var html_str = htmlBody.getContent();
   
   var title = DocumentApp.getActiveDocument().getName();
-
-  MailApp.sendEmail({
-    to: Session.getActiveUser().getEmail(),
-    subject: title  + new Date(),
-    htmlBody: htmlBody.getContent()
-  });
+  var html = exportAsHTML();
+  mailer(title, html);
+    
   }
   catch (e) {
     logErrors(e.toString());
   }
 }
 
+function mailer(title, body){
+   //var docbody = exportAsHTML();
+   MailApp.sendEmail({
+     to: Session.getActiveUser().getEmail(),
+     subject: title,
+     htmlBody:  body  });
+}
+function exportAsHTML(){
+  var forDriveScope = DriveApp.getStorageUsed(); //needed to get Drive Scope requested
+  var docID = DocumentApp.getActiveDocument().getId();
+  var url = "https://docs.google.com/feeds/download/documents/export/Export?id="+docID+"&exportFormat=html";
+  var param = {
+    method      : "get",
+    headers     : {"Authorization": "Bearer " + ScriptApp.getOAuthToken()},
+    muteHttpExceptions:true,
+  };
+  var html = UrlFetchApp.fetch(url,param).getContentText();
+  return html; 
+
+}
+
+function getHTMLFromURL() {
+  var id = DocumentApp.getActiveDocument().getId();
+  var url = "https://docs.google.com/feeds/download/documents/export/Export?id=" + id + "&exportFormat=html";
+  var html = UrlFetchApp.fetch(url).getContentText();
+/*  var param = {
+    method: "get",
+    headers: {"Authorization": "Bearer " + ScriptApp.getOAuthToken() },
+    muteHttpExceptions: true };
+  var html = UrlFetchApp.fetch(url, param).getContentText(); */
+   
+  return html;
+}
+
 function logErrors(e) {
-  // TO-DO: change to read this from the script preferences
   var logId = PropertiesService.getScriptProperties().getProperty('LogSheetId');
   var errorSheet = SpreadsheetApp.openById(logId)
      .getSheetByName("errors");

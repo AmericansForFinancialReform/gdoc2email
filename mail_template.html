@@ -7,9 +7,15 @@
     <img src="http://ourfinancialsecurity.org/wp-content/uploads/2016/03/AFR-logo-new-600px-1.jpg" alt="Americans for Financial Reform"/>
   </p>
     <p>
-    <?= DocumentApp.getActiveDocument().getBody().getText(); 
-    ?>
-
+    <!-- this prints out the UNFORMATTED text from the gdoc 
+     <?= DocumentApp.getActiveDocument().getBody().getText(); ?> -->
+   <br><br>
+   <?= exportAsHTML(); ?>
+     
+<!-- https://stackoverflow.com/questions/43134746/google-app-script-how-to-get-text-with-formatting-from-docs-and-use-it-for-body  -->
+<!-- this prints out the raw html, js, 
+     <?= getHTMLFromURL(); ?> -->
+     
     </p>
   </body>
 </html>
