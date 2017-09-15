@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Email Tester</title>
+    
+<base target="_top">
+
+<style type="text/css">
+<?!= include('Styles'); ?>
+</style>
+</head>
+<body>
+<div id="container" class="container">
+  <div class="block form-inline-group" id="button-bar">
+    <input type="button" value="Not Clicked"
+      onclick="google.script.run
+          .withSuccessHandler(updateButton)
+          .withUserObject(this)
+          .getEmail()" />
+    <input type="button" value="Not Clicked"
+      onclick="google.script.run
+          .withSuccessHandler(updateButton)
+          .withUserObject(this)
+          .getEmail()" />
+<button class="button wp_action" id="send-email" onclick="google.script.run
+          .withSuccessHandler(sendEmail)
+          .withUserObject(this)
+          .testSchemas()">Send Email</button>
+   </div>
+</div>
+
+
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js">
+    </script>
+    <script>
+    function updateButton(email, button) {
+        button.value = 'Clicked by ' + email;
+    }
+    
+    function sendEmail(email, button) {
+      button.innerHTML = "Sending email...";
+      console.log(email);
+    }
+
+      /**
+       * On document load, assign click handlers to each button and try to load the
+       * user's origin and destination language preferences if previously set.
+       */
+      $(function() {
+        $('#send-email').click(google.script.run.withSuccessHandler(testSchemas));
+        // sample success / failure handler: 
+        // google.script.run.withSuccessHandler(loadPreferences)
+        //    .withFailureHandler(showError).getPreferences();
+        // from: https://developers.google.com/apps-script/quickstart/docs#try_it_out
+      });
+      </script>
+</body>
+</html>
