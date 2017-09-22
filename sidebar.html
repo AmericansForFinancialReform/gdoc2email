@@ -12,20 +12,7 @@
 <body>
 <div id="container" class="container">
   <div class="block form-inline-group" id="button-bar">
-    <input type="button" value="Not Clicked"
-      onclick="google.script.run
-          .withSuccessHandler(updateButton)
-          .withUserObject(this)
-          .getEmail()" />
-    <input type="button" value="Not Clicked"
-      onclick="google.script.run
-          .withSuccessHandler(updateButton)
-          .withUserObject(this)
-          .getEmail()" />
-<button class="button wp_action" id="send-email" onclick="google.script.run
-          .withSuccessHandler(sendEmail)
-          .withUserObject(this)
-          .sendMailFromDocHTML()">Send Email</button>
+  <button class="button wp_action" id="send-email">Send Email</button>
    </div>
 </div>
 
@@ -33,14 +20,25 @@
 
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js">
     </script>
-    <script>
-    function updateButton(email, button) {
-        button.value = 'Clicked by ' + email;
+    <script>   
+    function sendEmail(button) {
+      button.innerHTML = "Sending Email...";
+      console.log("button: " + button.innerHTML);
+      resetEmailButton(button);
+      console.log("button: " + button.innerHTML);
+      google.script.run.withFailureHandler(printError)
+        .withUserObject(button)
+        .sendMailFromDocHTML();
+    }
+
+    function resetEmailButton(button) {
+      window.setTimeout(function() { 
+         button.innerHTML = "Send Email";
+      }, 1500);
     }
     
-    function sendEmail(email, button) {
-      button.innerHTML = "Sending email...";
-      console.log(email);
+    function printError(button) {
+     button.innerHTML = "An error occurred";
     }
 
       /**
@@ -48,7 +46,10 @@
        * user's origin and destination language preferences if previously set.
        */
       $(function() {
-        $('#send-email').click(google.script.run.withSuccessHandler(testSchemas));
+        
+        $('#send-email').click(function() { 
+          sendEmail(this);
+        }); 
         // sample success / failure handler: 
         // google.script.run.withSuccessHandler(loadPreferences)
         //    .withFailureHandler(showError).getPreferences();
